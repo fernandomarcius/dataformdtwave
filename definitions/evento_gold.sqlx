@@ -1,0 +1,26 @@
+config {
+    type: "table",
+    name: "evento_gold",
+    columns: {
+        Evento: "Nome do Evento",
+        Tax: "Pessoas únicas que realizaram compras para o evento",
+        TotalTickets: "Quantidade total de ingressos vendidos para o Evento",
+        Faturamento: "Total de faturamento para evento"
+    }
+}
+
+SELECT
+  tab.Nome AS Evento,
+  COUNT(DISTINCT(evt.id_cliente)) AS Tax,
+  SUM(evt.Tickets) AS TotalTickets,
+  SUM(evt.Valor) AS Faturamento
+FROM
+  datawavedb.silver.evento_silver AS evt
+INNER JOIN
+  datawavedb.db1.evento_tab AS tab
+ON
+  tab.ID = evt.id_evento
+GROUP BY
+  Evento
+ORDER BY
+  Faturamento DESC

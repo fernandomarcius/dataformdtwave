@@ -1,0 +1,40 @@
+config {
+    type: "table",
+    name: "cliente_gold",
+    columns: {
+      id_cliente: "Id único do cliente (cliente_silver.ID)" ,
+      Nome_Cliente: "Nome registrado do Cliente" ,
+      TotalGasto: "Total faturado no cpf do Cliente" ,
+      UltimaCompra: "Ultima compra realizada com sucesso",
+      PrimeiraCompra:"Primeira compra realizada com sucesso",
+      QtdCompras: "Quantas transações foram realizadas pelo clientes",
+      QtdTickets: "Soma de tickets comprados em todas as transações",
+      TicketMedio: "Total gasto divido pela quantidade tickets",
+      QtdEventos: "Quantos eventos o cliente realizou transações"
+
+    }
+}
+
+SELECT
+  cli.ID as id_cliente,
+  cli.Nome as Nome_Cliente,
+  SUM(evt.Valor) AS TotalGasto,
+  MAX(evt.DataPedido) AS UltimaCompra,
+  MIN(evt.DataPedido) AS PrimeiraCompra,
+  COUNT(evt.DataPedido) AS QtdCompras,
+  SUM(evt.Tickets) AS QtdTickets,
+  ROUND(SUM(evt.Valor) / COUNT(evt.DataPedido), 2) AS TicketMedio,
+  (COUNT(distinct(evt.id_evento))) as QtdEventos
+FROM
+  datawavedb.silver.cliente_silver AS cli
+INNER JOIN
+  datawavedb.silver.evento_silver AS evt
+ON
+  evt.id_cliente = cli.ID
+GROUP BY
+  cli.ID,
+  cli.Nome
+HAVING
+  TotalGasto > 0
+ORDER BY
+  TotalGasto DESC
