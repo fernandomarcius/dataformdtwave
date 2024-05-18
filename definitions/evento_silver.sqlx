@@ -1,0 +1,229 @@
+config {
+    type: "table",
+    name: "evento_silver",
+    columns: {
+        id_evento: "ID do Evento (db1.evento_tab)",
+        id_cliente: "ID do cliente (silver.cliente_silver)",
+        TipoIngresso: "Tipo do Ingresso vendido para o cliente",
+        Tickets: "Quantidade de Ingressos vendidos (Já levendo em conta as regras de passaporte e escolha)",
+        Valor: "Valor da transação",
+        TipoConvidado: "Tipo de Convidado",
+        DataPedido: "Data da transação",
+        DailyPassaporte: "Campo para demosntrar se é passaporte ou diario",
+        TipoTicket: "Área de liberação do evento para o cliente",
+        MeiaInteira: "Demonstração de Meia ou inteira",
+        MascFem: "Tipo de gênero do ingresso",
+        transactionId: "ID da Transação"
+    }
+}
+
+WITH
+  eventos AS (
+  SELECT
+    ROW_NUMBER() OVER (PARTITION BY querie.transactionId, querie.TipoIngresso, querie.Tickets ORDER BY querie.transactionId) AS row_num,
+    querie.transactionId,
+    cli.ID AS id_cliente,
+    querie.id_evento,
+    querie.TipoIngresso,
+    (CASE
+        WHEN UPPER(querie.TipoIngresso) LIKE '%PASSAPORTE%' THEN querie.Tickets * 2
+        WHEN UPPER(querie.TipoIngresso) LIKE '%ESCOLHA%' THEN querie.Tickets * 0
+      ELSE
+      querie.Tickets
+    END
+      ) AS Tickets,
+    (CASE
+        WHEN UPPER(querie.TipoIngresso) LIKE '%MEIA%' THEN 'Meia'
+      ELSE
+      'Inteira'
+    END
+      ) AS MeiaInteira,
+    (CASE
+        WHEN UPPER(querie.TipoIngresso) LIKE '%PASSAPORTE%' THEN 'Passaporte'
+      ELSE
+      'Daily'
+    END
+      ) AS DailyPassaporte,
+    (CASE
+        WHEN UPPER(querie.TipoIngresso) LIKE '%VIP%' THEN 'Vip'
+        WHEN UPPER(querie.TipoIngresso) LIKE '%BACKSTAGE%' THEN 'Backstage'
+        WHEN UPPER(querie.TipoIngresso) LIKE '%CAMAROTE%' THEN 'Camarote'
+      ELSE
+      'Pista'
+    END
+      ) AS TipoTicket,
+    querie.Valor,
+    querie.TipoConvidado,
+    querie.DataPedido,
+    querie.MascFem
+  FROM (
+    SELECT
+      id_evento,
+      transactionId,
+      Tipo_de_ingresso AS TipoIngresso,
+      num_ing AS Tickets,
+      price_ing AS Valor,
+      guest_type AS TipoConvidado,
+      data_pedido AS DataPedido,
+      CPF,
+      Ingresso_Masc___Fem AS MascFem
+    FROM
+      datawavedb.db1.evento_bomabh24
+    WHERE
+      id_evento IS NOT NULL
+    UNION ALL
+    SELECT
+      id_evento,
+      transactionId,
+      Tipo_de_ingresso AS TipoIngresso,
+      num_ing AS Tickets,
+      price_ing AS Valor,
+      guest_type AS TipoConvidado,
+      data_pedido AS DataPedido,
+      CPF,
+      Ingresso_Masc___Fem AS MascFem
+    FROM
+      datawavedb.db1.evento_bomadis24
+    WHERE
+      id_evento IS NOT NULL
+    UNION ALL
+    SELECT
+      id_evento,
+      transactionId,
+      Tipo_de_ingresso AS TipoIngresso,
+      num_ing AS Tickets,
+      price_ing AS Valor,
+      guest_type AS TipoConvidado,
+      data_pedido AS DataPedido,
+      CPF,
+      Ingresso_Masc___Fem AS MascFem
+    FROM
+      datawavedb.db1.evento_bomarj23
+    WHERE
+      id_evento IS NOT NULL
+    UNION ALL
+    SELECT
+      id_evento,
+      transactionId,
+      Tipo_de_ingresso AS TipoIngresso,
+      num_ing AS Tickets,
+      price_ing AS Valor,
+      guest_type AS TipoConvidado,
+      data_pedido AS DataPedido,
+      CPF,
+      Ingresso_Masc___Fem AS MascFem
+    FROM
+      datawavedb.db1.evento_bomarj24
+    WHERE
+      id_evento IS NOT NULL
+    UNION ALL
+    SELECT
+      id_evento,
+      transactionId,
+      Tipo_de_ingresso AS TipoIngresso,
+      num_ing AS Tickets,
+      price_ing AS Valor,
+      guest_type AS TipoConvidado,
+      data_pedido AS DataPedido,
+      CPF,
+      Ingresso_Masc___Fem AS MascFem
+    FROM
+      datawavedb.db1.evento_bomasp24
+    WHERE
+      id_evento IS NOT NULL
+    UNION ALL
+    SELECT
+      id_evento,
+      transactionId,
+      Tipo_de_ingresso AS TipoIngresso,
+      num_ing AS Tickets,
+      price_ing AS Valor,
+      guest_type AS TipoConvidado,
+      data_pedido AS DataPedido,
+      CPF,
+      Ingresso_Masc___Fem AS MascFem
+    FROM
+      datawavedb.db1.evento_brunchrj24
+    WHERE
+      id_evento IS NOT NULL
+    UNION ALL
+    SELECT
+      id_evento,
+      transactionId,
+      Tipo_de_ingresso AS TipoIngresso,
+      num_ing AS Tickets,
+      price_ing AS Valor,
+      guest_type AS TipoConvidado,
+      data_pedido AS DataPedido,
+      CPF,
+      Ingresso_Masc___Fem AS MascFem
+    FROM
+      datawavedb.db1.evento_brunchsp24_1
+    WHERE
+      id_evento IS NOT NULL
+    UNION ALL
+    SELECT
+      id_evento,
+      transactionId,
+      Tipo_de_ingresso AS TipoIngresso,
+      num_ing AS Tickets,
+      price_ing AS Valor,
+      guest_type AS TipoConvidado,
+      data_pedido AS DataPedido,
+      CPF,
+      Ingresso_Masc___Fem AS MascFem
+    FROM
+      datawavedb.db1.evento_brunchsp24_2
+    WHERE
+      id_evento IS NOT NULL
+    UNION ALL
+    SELECT
+      id_evento,
+      transactionId,
+      Tipo_de_ingresso AS TipoIngresso,
+      num_ing AS Tickets,
+      price_ing AS Valor,
+      guest_type AS TipoConvidado,
+      data_pedido AS DataPedido,
+      CPF,
+      Ingresso_Masc___Fem AS MascFem
+    FROM
+      datawavedb.db1.evento_noart24
+    WHERE
+      id_evento IS NOT NULL
+    UNION ALL
+    SELECT
+      id_evento,
+      transactionId,
+      Tipo_de_ingresso AS TipoIngresso,
+      num_ing AS Tickets,
+      price_ing AS Valor,
+      guest_type AS TipoConvidado,
+      data_pedido AS DataPedido,
+      CPF,
+      Ingresso_Masc___Fem AS MascFem
+    FROM
+      datawavedb.db1.evento_tw24
+    WHERE
+      id_evento IS NOT NULL ) AS querie
+  INNER JOIN
+    datawavedb.silver.cliente_silver AS cli
+  ON
+    cli.CPF = querie.CPF )
+SELECT
+  id_evento,
+  id_cliente,
+  TipoIngresso,
+  Tickets,
+  Valor,
+  TipoConvidado,
+  DataPedido,
+  DailyPassaporte,
+  TipoTicket,
+  MeiaInteira,
+  MascFem,
+  transactionId
+FROM
+  eventos
+WHERE
+  row_num = 1

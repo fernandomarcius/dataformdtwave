@@ -1,0 +1,162 @@
+config {
+    type: "table",
+    name: "cliente_silver",
+    columns: {
+        ID: "ID único do Cliente",
+        CPF: "CPF do cliente",
+        Nome: "Nome do Cliente",
+        Email: "Email do Cliente",
+        Telefone: "Telefone do Cliente",
+        Cidade: "Cidade do Cliente",
+        Estado: "Estado do Cliente"
+    }
+}
+
+  -- This is an example SQLX file to help you learn the basics of Dataform.
+  -- Visit https://cloud.google.com/dataform/docs/sql-workflows for more information on how to configure your SQL workflow.
+  -- You can delete this file, then commit and push your changes to your repository when you are ready.
+  -- Config blocks allow you to configure, document, and test your data assets.
+  -- The rest of a SQLX file contains your SELECT statement used to create the table.
+WITH
+  eventos AS (
+  SELECT
+    ROW_NUMBER() OVER () AS ID,
+    nome_comprador,
+    email_comprador,
+    phone_comprador,
+    cidade,
+    estado,
+    CPF,
+    ROW_NUMBER() OVER (PARTITION BY CPF ORDER BY nome_comprador) AS row_num
+  FROM (
+    SELECT
+      nome_comprador,
+      email_comprador,
+      phone_comprador,
+      cidade,
+      estado,
+      CPF
+    FROM
+      datawavedb.db1.evento_bomabh24
+    WHERE
+      id_evento IS NOT NULL
+    UNION ALL
+    SELECT
+      nome_comprador,
+      email_comprador,
+      phone_comprador,
+      cidade,
+      estado,
+      CPF
+    FROM
+      datawavedb.db1.evento_bomadis24
+    WHERE
+      id_evento IS NOT NULL
+    UNION ALL
+    SELECT
+      nome_comprador,
+      email_comprador,
+      phone_comprador,
+      cidade,
+      estado,
+      CPF
+    FROM
+      datawavedb.db1.evento_bomarj23
+    WHERE
+      id_evento IS NOT NULL
+    UNION ALL
+    SELECT
+      nome_comprador,
+      email_comprador,
+      phone_comprador,
+      cidade,
+      estado,
+      CPF
+    FROM
+      datawavedb.db1.evento_bomarj24
+    WHERE
+      id_evento IS NOT NULL
+    UNION ALL
+    SELECT
+      nome_comprador,
+      email_comprador,
+      phone_comprador,
+      cidade,
+      estado,
+      CPF
+    FROM
+      datawavedb.db1.evento_bomasp24
+    WHERE
+      id_evento IS NOT NULL
+    UNION ALL
+    SELECT
+      nome_comprador,
+      email_comprador,
+      phone_comprador,
+      cidade,
+      estado,
+      CPF
+    FROM
+      datawavedb.db1.evento_brunchrj24
+    WHERE
+      id_evento IS NOT NULL
+    UNION ALL
+    SELECT
+      nome_comprador,
+      email_comprador,
+      phone_comprador,
+      cidade,
+      estado,
+      CPF
+    FROM
+      datawavedb.db1.evento_brunchsp24_1
+    WHERE
+      id_evento IS NOT NULL
+    UNION ALL
+    SELECT
+      nome_comprador,
+      email_comprador,
+      phone_comprador,
+      cidade,
+      estado,
+      CPF
+    FROM
+      datawavedb.db1.evento_brunchsp24_2
+    WHERE
+      id_evento IS NOT NULL
+    UNION ALL
+    SELECT
+      nome_comprador,
+      email_comprador,
+      phone_comprador,
+      cidade,
+      estado,
+      CPF
+    FROM
+      datawavedb.db1.evento_noart24
+    WHERE
+      id_evento IS NOT NULL
+    UNION ALL
+    SELECT
+      nome_comprador,
+      email_comprador,
+      phone_comprador,
+      cidade,
+      estado,
+      CPF
+    FROM
+      datawavedb.db1.evento_tw24
+    WHERE
+      id_evento IS NOT NULL ) )
+SELECT
+  ID,
+  LPAD(CPF, 11, '0') AS CPF,
+  UPPER(nome_comprador) AS Nome,
+  email_comprador AS Email,
+  phone_comprador AS Telefone,
+  cidade AS Cidade,
+  estado AS Estado
+FROM
+  eventos
+WHERE
+  row_num = 1
