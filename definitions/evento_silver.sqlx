@@ -207,7 +207,7 @@ WITH
     WHERE
       id_evento IS NOT NULL ) AS querie
   INNER JOIN
-    datawavedb.silver.cliente_silver AS cli
+    ${ref("cliente_silver")} AS cli
   ON
     cli.CPF = querie.CPF )
 SELECT
