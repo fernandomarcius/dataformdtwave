@@ -147,9 +147,9 @@ WITH
     FROM
       datawavedb.db1.evento_tw24
     WHERE
-      id_evento IS NOT NULL 
-      UNION ALL
-       SELECT
+      id_evento IS NOT NULL
+    UNION ALL
+    SELECT
       nome_comprador,
       email_comprador,
       phone_comprador,
@@ -171,6 +171,6 @@ SELECT
 FROM
   eventos
 WHERE
-  row_num = 1
-
-${when(incremental(), `AND CPF <> (SELECT LPAD(CPF, 11, '0') FROM ${self()})`)}
+  row_num = 1 
+  
+  ${when(incremental(), `AND LPAD(CPF, 11, '0') NOT IN (SELECT CPF FROM ${self()})`)}

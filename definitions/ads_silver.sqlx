@@ -1,0 +1,67 @@
+config {
+    type: "table",
+    name: "ads_silver",
+    columns: {
+        id_evento: "ID único do Evento",
+        Conta: "Nome da Conta",
+        Campanha: "Nome da Campanha",
+        Data: "Data da ativação da campanha",
+        Converscoes: "Número de Conversões",
+        Custo: "Custo da Campanha",
+        Faturado: "Valor Total Faturado"
+    }
+}
+
+SELECT
+  CASE
+    WHEN ad.Account_Name LIKE '%Time Warp%' THEN 'tw24'
+    WHEN ad.Campaign_Name LIKE '%BOMA-RJ%' THEN 'bomarj24'
+    WHEN ad.Campaign_Name LIKE '%BOMA-BH%' THEN 'bomabh24'
+    WHEN ad.Campaign_Name LIKE '%BOMA-SP%' THEN 'bomasp24'
+    WHEN ad.Campaign_Name LIKE '%NO ART%' THEN 'noart24'
+    WHEN ad.Campaign_Name LIKE '%[SEARCH] [BOMA] Vendas abertas%' THEN 'bomadis24'
+    WHEN ad.Account_Name LIKE '%Brunch RJ%' THEN 'brunrj24'
+    WHEN ad.Account_Name LIKE '%Brunch SP%' THEN 'brunchsp24-1'
+  ELSE
+  'other'
+  -- caso nenhuma condição seja atendida
+END
+  AS id_evento,
+  ad.Account_Name AS Conta,
+  ad.Campaign_Name AS Campanha,
+  ad.day AS DATA,
+  CAST(ad.Conversions AS INT64) AS Converscoes,
+  ad.Cost__Spend_ AS Custo,
+  ad.Total_conv__value AS Faturado
+FROM
+  `datawavedb.db1.ads_google` AS ad
+WHERE
+  ad.day IS NOT NULL
+UNION ALL
+SELECT
+  CASE
+    WHEN meta.Account_Name LIKE '%Time Warp%' THEN 'tw24'
+    WHEN meta.Campaign_Name LIKE '%BOMA-RJ%' THEN 'bomarj24'
+    WHEN meta.Campaign_Name LIKE '%BOMA-BH%' THEN 'bomabh24'
+    WHEN meta.Campaign_Name LIKE '%BOMA-SP%' THEN 'bomasp24'
+    WHEN meta.Campaign_Name LIKE '%NO ART%' THEN 'noart24'
+    WHEN meta.Campaign_Name LIKE '%[SEARCH] [BOMA] Vendas abertas%' THEN 'bomadis24'
+    WHEN meta.Account_Name LIKE '%Brunch RJ%' THEN 'brunrj24'
+    WHEN meta.Account_Name LIKE '%Brunch SP%' THEN 'brunchsp24-1'
+  ELSE
+  'other'
+  -- caso nenhuma condição seja atendida
+END
+  AS id_evento,
+  meta.Account_Name AS Conta,
+  meta.Campaign_Name AS Campanha,
+  meta.day AS DATA,
+  CAST(meta.Conversions AS INT64) AS Converscoes,
+  meta.Cost__Spend_ AS Custo,
+  meta.Total_conv__value AS Faturado
+FROM
+  `datawavedb.db1.ads_meta` AS meta
+WHERE
+  meta.day IS NOT NULL
+ORDER BY
+  DATA
