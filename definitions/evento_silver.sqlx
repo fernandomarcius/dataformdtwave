@@ -1,5 +1,5 @@
 config {
-    type: "table",
+    type: "incremental",
     name: "evento_silver",
     columns: {
         id_evento: "ID do Evento (db1.evento_tab)",
@@ -128,6 +128,21 @@ WITH
       CPF,
       Ingresso_Masc___Fem AS MascFem
     FROM
+      datawavedb.db1.evento_tantsa23
+    WHERE
+      id_evento IS NOT NULL
+    UNION ALL
+    SELECT
+      id_evento,
+      transactionId,
+      Tipo_de_ingresso AS TipoIngresso,
+      num_ing AS Tickets,
+      price_ing AS Valor,
+      guest_type AS TipoConvidado,
+      data_pedido AS DataPedido,
+      CPF,
+      Ingresso_Masc___Fem AS MascFem
+    FROM
       datawavedb.db1.evento_bomasp24
     WHERE
       id_evento IS NOT NULL
@@ -227,3 +242,5 @@ FROM
   eventos
 WHERE
   row_num = 1
+
+  ${when(incremental(), `AND transactionId NOT IN (SELECT transactionId FROM ${self()}) and Valor NOT IN (SELECT Valor FROM ${self()})  and TipoIngresso NOT IN (SELECT TipoIngresso FROM ${self()})`)}

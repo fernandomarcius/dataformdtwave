@@ -1,5 +1,5 @@
 config {
-    type: "table",
+    type: "incremental",
     name: "cliente_silver",
     columns: {
         ID: "ID único do Cliente",
@@ -147,7 +147,19 @@ WITH
     FROM
       datawavedb.db1.evento_tw24
     WHERE
-      id_evento IS NOT NULL ) )
+      id_evento IS NOT NULL 
+      UNION ALL
+       SELECT
+      nome_comprador,
+      email_comprador,
+      phone_comprador,
+      cidade,
+      estado,
+      CPF
+    FROM
+      datawavedb.db1.evento_tantsa23
+    WHERE
+      id_evento IS NOT NULL) )
 SELECT
   ID,
   LPAD(CPF, 11, '0') AS CPF,
@@ -160,3 +172,5 @@ FROM
   eventos
 WHERE
   row_num = 1
+
+${when(incremental(), `AND CPF <> (SELECT LPAD(CPF, 11, '0') FROM ${self()})`)}
