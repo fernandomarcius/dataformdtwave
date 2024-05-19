@@ -3,6 +3,7 @@ config {
     name: "ads_silver",
     columns: {
         id_evento: "ID único do Evento",
+        Plataforma: "Plataforma utilizada na campanha",
         Conta: "Nome da Conta",
         Campanha: "Nome da Campanha",
         Data: "Data da ativação da campanha",
@@ -32,7 +33,8 @@ END
   ad.day AS DATA,
   CAST(ad.Conversions AS INT64) AS Converscoes,
   ad.Cost__Spend_ AS Custo,
-  ad.Total_conv__value AS Faturado
+  ad.Total_conv__value AS Faturado,
+  'GOOGLE' as Plataforma
 FROM
   `datawavedb.db1.ads_google` AS ad
 WHERE
@@ -58,7 +60,8 @@ END
   meta.day AS DATA,
   CAST(meta.Conversions AS INT64) AS Converscoes,
   meta.Cost__Spend_ AS Custo,
-  meta.Total_conv__value AS Faturado
+  meta.Total_conv__value AS Faturado,
+   'META' as Plataforma
 FROM
   `datawavedb.db1.ads_meta` AS meta
 WHERE
