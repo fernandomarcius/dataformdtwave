@@ -1,0 +1,30 @@
+config {
+    type: "table",
+    name: "ads_gold",
+    columns: {
+        Evento: "Nome do Evento",
+        Conversoes: "Total de Conversões do evento",
+        Custo: "Custo total por plataforma do Evento",
+        Faturamento: "Total de faturamento para evento",
+        Plataforma: "Plataforma onde a campanha foi ativada"
+    }
+}
+
+SELECT
+  evt.nome AS Evento,
+  SUM(ad.Conversoes) AS Conversoes,
+  ROUND(SUM(ad.Custo), 2) AS Custo,
+  ROUND(SUM(ad.Faturado), 2) AS Faturamento,
+  ad.Plataforma
+FROM
+  `datawavedb.silver.ads_silver` AS ad
+INNER JOIN
+  `db1.evento_tab` AS evt
+ON
+  ad.id_evento = evt.ID
+GROUP BY
+  Evento,
+  Plataforma
+ORDER BY
+  1,
+  2

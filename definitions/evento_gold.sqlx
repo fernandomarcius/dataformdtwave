@@ -1,30 +1,27 @@
 config {
+
     type: "table",
     name: "evento_gold",
     columns: {
         Evento: "Nome do Evento",
-        Conversoes: "Total de Conversões do evento",
-        Custo: "Custo total por plataforma do Evento",
-        Faturamento: "Total de faturamento para evento",
-        Plataforma: "Plataforma onde a campanha foi ativada"
+        Tax: "Pessoas únicas que realizaram compras para o evento",
+        TotalTickets: "Quantidade total de ingressos vendidos para o Evento",
+        Faturamento: "Total de faturamento para evento"
     }
 }
 
 SELECT
-  evt.nome AS Evento,
-  SUM(ad.Conversoes) AS Conversoes,
-  ROUND(SUM(ad.Custo), 2) AS Custo,
-  ROUND(SUM(ad.Faturado), 2) AS Faturamento,
-  ad.Plataforma
+  tab.Nome AS Evento,
+  COUNT(DISTINCT(evt.id_cliente)) AS Tax,
+  SUM(evt.Tickets) AS TotalTickets,
+  SUM(evt.Valor) AS Faturamento
 FROM
-  `datawavedb.silver.ads_silver` AS ad
+  datawavedb.silver.evento_silver AS evt
 INNER JOIN
-  `db1.evento_tab` AS evt
+  datawavedb.db1.evento_tab AS tab
 ON
-  ad.id_evento = evt.ID
+  tab.ID = evt.id_evento
 GROUP BY
-  Evento,
-  Plataforma
+  Evento
 ORDER BY
-  1,
-  2
+  Faturamento DESC
