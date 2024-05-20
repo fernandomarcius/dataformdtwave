@@ -7,7 +7,7 @@ config {
         Conta: "Nome da Conta",
         Campanha: "Nome da Campanha",
         Data: "Data da ativação da campanha",
-        Converscoes: "Número de Conversões",
+        Conversoes: "Número de Conversões",
         Custo: "Custo da Campanha",
         Faturado: "Valor Total Faturado"
     }
@@ -31,10 +31,10 @@ END
   ad.Account_Name AS Conta,
   ad.Campaign_Name AS Campanha,
   ad.day AS DATA,
-  CAST(ad.Conversions AS INT64) AS Converscoes,
+  CAST(ad.Conversions AS INT64) AS Conversoes,
   ad.Cost__Spend_ AS Custo,
   ad.Total_conv__value AS Faturado,
-  'GOOGLE' as Plataforma
+  'GOOGLE' AS Plataforma
 FROM
   `datawavedb.db1.ads_google` AS ad
 WHERE
@@ -50,6 +50,12 @@ SELECT
     WHEN meta.Campaign_Name LIKE '%[SEARCH] [BOMA] Vendas abertas%' THEN 'bomadis24'
     WHEN meta.Account_Name LIKE '%Brunch RJ%' THEN 'brunrj24'
     WHEN meta.Account_Name LIKE '%Brunch SP%' THEN 'brunchsp24-1'
+    WHEN meta.Account_Name LIKE '%Tantsa%' THEN 'tantsa23'
+    WHEN meta.Account_Name LIKE '%We Are Boma 2.0%' THEN 'bomarj23'
+    WHEN meta.Account_Name LIKE '%BOMA SÃO PAULO%' THEN 'bomasp24'
+    WHEN meta.Account_Name LIKE '%Brunch Eletronik RJ%' THEN 'brunrj24'
+    WHEN meta.Account_Name LIKE '%We Are Boma (RJ)' THEN 'bomarj24'
+    WHEN meta.Account_Name LIKE '%Brunch Eletronik SP' THEN 'brunchsp24-1'
   ELSE
   'other'
   -- caso nenhuma condição seja atendida
@@ -57,11 +63,11 @@ END
   AS id_evento,
   meta.Account_Name AS Conta,
   meta.Campaign_Name AS Campanha,
-  meta.day AS DATA,
-  CAST(meta.Conversions AS INT64) AS Converscoes,
-  meta.Cost__Spend_ AS Custo,
-  meta.Total_conv__value AS Faturado,
-   'META' as Plataforma
+  cast(meta.day as date) AS DATA,
+  cast(meta.Purchases as INT64) AS Conversoes,
+  meta.Amount_Spent AS Custo,
+  cast(meta.Purchases_Conversion_Value as FLOAT64) AS Faturado,
+  'META' AS Plataforma
 FROM
   `datawavedb.db1.ads_meta` AS meta
 WHERE
