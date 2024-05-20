@@ -65,7 +65,7 @@ WITH
       price_ing AS Valor,
       guest_type AS TipoConvidado,
       data_pedido AS DataPedido,
-      CPF,
+      LPAD(CPF, 11, '0') AS CPF,
       Ingresso_Masc___Fem AS MascFem
     FROM
       datawavedb.db1.evento_bomabh24
@@ -80,7 +80,7 @@ WITH
       price_ing AS Valor,
       guest_type AS TipoConvidado,
       data_pedido AS DataPedido,
-      CPF,
+      LPAD(CPF, 11, '0') AS CPF,
       Ingresso_Masc___Fem AS MascFem
     FROM
       datawavedb.db1.evento_bomadis24
@@ -95,7 +95,7 @@ WITH
       price_ing AS Valor,
       guest_type AS TipoConvidado,
       data_pedido AS DataPedido,
-      CPF,
+      LPAD(CPF, 11, '0') AS CPF,
       Ingresso_Masc___Fem AS MascFem
     FROM
       datawavedb.db1.evento_bomarj23
@@ -110,7 +110,7 @@ WITH
       price_ing AS Valor,
       guest_type AS TipoConvidado,
       data_pedido AS DataPedido,
-      CPF,
+      LPAD(CPF, 11, '0') AS CPF,
       Ingresso_Masc___Fem AS MascFem
     FROM
       datawavedb.db1.evento_bomarj24
@@ -125,7 +125,7 @@ WITH
       price_ing AS Valor,
       guest_type AS TipoConvidado,
       data_pedido AS DataPedido,
-      CPF,
+      LPAD(CPF, 11, '0') AS CPF,
       Ingresso_Masc___Fem AS MascFem
     FROM
       datawavedb.db1.evento_tantsa23
@@ -140,7 +140,7 @@ WITH
       price_ing AS Valor,
       guest_type AS TipoConvidado,
       data_pedido AS DataPedido,
-      CPF,
+      LPAD(CPF, 11, '0') AS CPF,
       Ingresso_Masc___Fem AS MascFem
     FROM
       datawavedb.db1.evento_bomasp24
@@ -155,7 +155,7 @@ WITH
       price_ing AS Valor,
       guest_type AS TipoConvidado,
       data_pedido AS DataPedido,
-      CPF,
+      LPAD(CPF, 11, '0') AS CPF,
       Ingresso_Masc___Fem AS MascFem
     FROM
       datawavedb.db1.evento_brunchrj24
@@ -170,7 +170,7 @@ WITH
       price_ing AS Valor,
       guest_type AS TipoConvidado,
       data_pedido AS DataPedido,
-      CPF,
+      LPAD(CPF, 11, '0') AS CPF,
       Ingresso_Masc___Fem AS MascFem
     FROM
       datawavedb.db1.evento_brunchsp24_1
@@ -185,7 +185,7 @@ WITH
       price_ing AS Valor,
       guest_type AS TipoConvidado,
       data_pedido AS DataPedido,
-      CPF,
+      LPAD(CPF, 11, '0') AS CPF,
       Ingresso_Masc___Fem AS MascFem
     FROM
       datawavedb.db1.evento_brunchsp24_2
@@ -200,7 +200,7 @@ WITH
       price_ing AS Valor,
       guest_type AS TipoConvidado,
       data_pedido AS DataPedido,
-      CPF,
+      LPAD(CPF, 11, '0') AS CPF,
       Ingresso_Masc___Fem AS MascFem
     FROM
       datawavedb.db1.evento_noart24
@@ -215,13 +215,13 @@ WITH
       price_ing AS Valor,
       guest_type AS TipoConvidado,
       data_pedido AS DataPedido,
-      CPF,
+      LPAD(CPF, 11, '0') AS CPF,
       Ingresso_Masc___Fem AS MascFem
     FROM
       datawavedb.db1.evento_tw24
     WHERE
       id_evento IS NOT NULL ) AS querie
-  INNER JOIN
+  LEFT JOIN
     ${ref("cliente_silver")} AS cli
   ON
     cli.CPF = querie.CPF )
