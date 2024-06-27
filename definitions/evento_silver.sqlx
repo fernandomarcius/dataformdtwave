@@ -212,7 +212,7 @@ WITH
     SELECT
       id_evento,
       transactionId,
-      Tipo_de_ingresso AS TipoIngresso,
+      Tipodeingresso AS TipoIngresso,
       num_ing AS Tickets,
       price_ing AS Valor,
       guest_type AS TipoConvidado,
