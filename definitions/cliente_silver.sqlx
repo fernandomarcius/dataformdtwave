@@ -163,6 +163,7 @@ WITH
 SELECT
   ID,
   LPAD(CPF, 11, '0') AS CPF,
+  CPF as CPFROW,
   UPPER(nome_comprador) AS Nome,
   email_comprador AS Email,
   phone_comprador AS Telefone,

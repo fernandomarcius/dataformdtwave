@@ -4,6 +4,7 @@ config {
     columns: {
         id_evento: "ID do Evento (db1.evento_tab)",
         id_cliente: "ID do cliente (silver.cliente_silver)",
+        NomeCliente: "Nome do Comprador (silver.cliente_silver)",
         TipoIngresso: "Tipo do Ingresso vendido para o cliente",
         Tickets: "Quantidade de Ingressos vendidos (Já levendo em conta as regras de passaporte e escolha)",
         Valor: "Valor da transação",
@@ -23,6 +24,7 @@ WITH
     ROW_NUMBER() OVER (PARTITION BY querie.transactionId, querie.TipoIngresso, querie.Tickets ORDER BY querie.transactionId) AS row_num,
     querie.transactionId,
     cli.ID AS id_cliente,
+    cli.Nome as NomeCliente,
     querie.id_evento,
     querie.TipoIngresso,
     (CASE
@@ -65,7 +67,7 @@ WITH
       price_ing AS Valor,
       guest_type AS TipoConvidado,
       data_pedido AS DataPedido,
-      LPAD(CPF, 11, '0') AS CPF,
+       CPF,
       Ingresso_Masc___Fem AS MascFem
     FROM
       datawavedb.db1.evento_bomabh24
@@ -80,7 +82,7 @@ WITH
       price_ing AS Valor,
       guest_type AS TipoConvidado,
       data_pedido AS DataPedido,
-      LPAD(CPF, 11, '0') AS CPF,
+       CPF,
       Ingresso_Masc___Fem AS MascFem
     FROM
       datawavedb.db1.evento_bomadis24
@@ -95,7 +97,7 @@ WITH
       price_ing AS Valor,
       guest_type AS TipoConvidado,
       data_pedido AS DataPedido,
-      LPAD(CPF, 11, '0') AS CPF,
+       CPF,
       Ingresso_Masc___Fem AS MascFem
     FROM
       datawavedb.db1.evento_bomarj23
@@ -110,7 +112,7 @@ WITH
       price_ing AS Valor,
       guest_type AS TipoConvidado,
       data_pedido AS DataPedido,
-      LPAD(CPF, 11, '0') AS CPF,
+       CPF,
       Ingresso_Masc___Fem AS MascFem
     FROM
       datawavedb.db1.evento_bomarj24
@@ -125,7 +127,7 @@ WITH
       price_ing AS Valor,
       guest_type AS TipoConvidado,
       data_pedido AS DataPedido,
-      LPAD(CPF, 11, '0') AS CPF,
+       CPF,
       Ingresso_Masc___Fem AS MascFem
     FROM
       datawavedb.db1.evento_tantsa23
@@ -140,7 +142,7 @@ WITH
       price_ing AS Valor,
       guest_type AS TipoConvidado,
       data_pedido AS DataPedido,
-      LPAD(CPF, 11, '0') AS CPF,
+       CPF,
       Ingresso_Masc___Fem AS MascFem
     FROM
       datawavedb.db1.evento_bomasp24
@@ -155,7 +157,7 @@ WITH
       price_ing AS Valor,
       guest_type AS TipoConvidado,
       data_pedido AS DataPedido,
-      LPAD(CPF, 11, '0') AS CPF,
+       CPF,
       Ingresso_Masc___Fem AS MascFem
     FROM
       datawavedb.db1.evento_brunchrj24
@@ -170,7 +172,7 @@ WITH
       price_ing AS Valor,
       guest_type AS TipoConvidado,
       data_pedido AS DataPedido,
-      LPAD(CPF, 11, '0') AS CPF,
+       CPF,
       Ingresso_Masc___Fem AS MascFem
     FROM
       datawavedb.db1.evento_brunchsp24_1
@@ -185,7 +187,7 @@ WITH
       price_ing AS Valor,
       guest_type AS TipoConvidado,
       data_pedido AS DataPedido,
-      LPAD(CPF, 11, '0') AS CPF,
+       CPF,
       Ingresso_Masc___Fem AS MascFem
     FROM
       datawavedb.db1.evento_brunchsp24_2
@@ -200,7 +202,7 @@ WITH
       price_ing AS Valor,
       guest_type AS TipoConvidado,
       data_pedido AS DataPedido,
-      LPAD(CPF, 11, '0') AS CPF,
+       CPF,
       Ingresso_Masc___Fem AS MascFem
     FROM
       datawavedb.db1.evento_noart24
@@ -215,7 +217,7 @@ WITH
       price_ing AS Valor,
       guest_type AS TipoConvidado,
       data_pedido AS DataPedido,
-      LPAD(CPF, 11, '0') AS CPF,
+       CPF,
       Ingresso_Masc___Fem AS MascFem
     FROM
       datawavedb.db1.evento_tw24
@@ -224,10 +226,11 @@ WITH
   LEFT JOIN
     ${ref("cliente_silver")} AS cli
   ON
-    cli.CPF = querie.CPF )
+    cli.CPFROW = querie.CPF )
 SELECT
   id_evento,
   id_cliente,
+  NomeCliente,
   TipoIngresso,
   Tickets,
   Valor,
