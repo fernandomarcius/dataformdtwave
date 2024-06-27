@@ -220,6 +220,21 @@ WITH
        CPF,
       Ingresso_Masc___Fem AS MascFem
     FROM
+      datawavedb.db1.evento_stbsp24
+    WHERE
+      id_evento IS NOT NULL
+    UNION ALL
+    SELECT
+      id_evento,
+      transactionId,
+      Tipo_de_ingresso AS TipoIngresso,
+      num_ing AS Tickets,
+      price_ing AS Valor,
+      guest_type AS TipoConvidado,
+      data_pedido AS DataPedido,
+       CPF,
+      Ingresso_Masc___Fem AS MascFem
+    FROM
       datawavedb.db1.evento_tw24
     WHERE
       id_evento IS NOT NULL ) AS querie
