@@ -15,14 +15,17 @@ config {
 
 SELECT
   CASE
-    WHEN ad.Account_Name LIKE '%Time Warp%' THEN 'tw24'
-    WHEN ad.Campaign_Name LIKE '%BOMA-RJ%' THEN 'bomarj24'
-    WHEN ad.Campaign_Name LIKE '%BOMA-BH%' THEN 'bomabh24'
-    WHEN ad.Campaign_Name LIKE '%BOMA-SP%' THEN 'bomasp24'
-    WHEN ad.Campaign_Name LIKE '%NO ART%' THEN 'noart24'
-    WHEN ad.Campaign_Name LIKE '%[SEARCH] [BOMA] Vendas abertas%' THEN 'bomadis24'
-    WHEN ad.Account_Name LIKE '%Brunch RJ%' THEN 'brunrj24'
-    WHEN ad.Account_Name LIKE '%Brunch SP%' THEN 'brunchsp24-1'
+    WHEN meta.Account_Name LIKE '%DT [TIMEWARP 04.05]%' THEN 'tw24'
+    WHEN meta.Campaign_Name LIKE '%DT [BOMA RJ 03.05]%' THEN 'bomarj24'
+    WHEN meta.Campaign_Name LIKE '%DT [BOMA BH 04.05]%' THEN 'bomabh24'
+    WHEN meta.Campaign_Name LIKE '%DT [BOMA SP 19.04]%' THEN 'bomasp24'
+    WHEN meta.Campaign_Name LIKE '%[NO ART]%' THEN 'noart24'
+    WHEN meta.Campaign_Name LIKE '%[DISCLOSURE]%' THEN 'bomadis24'
+    WHEN meta.Campaign_Name LIKE '%DT - [Brunch RJ 27.01.24]%' THEN 'brunrj24'
+    WHEN meta.Campaign_Name LIKE '%[BRUNCH SP 16.03]%' THEN 'brunchsp24-1'
+    WHEN meta.Campaign_Name LIKE '%DT - [Tantsa 21.09.23]%' THEN 'tantsa23'
+    WHEN meta.Campaign_Name LIKE '%DT - [BOMA RIO 17.11.23]%' THEN 'bomarj23'
+    WHEN meta.Campaign_Name LIKE '%[STB SP 24]%' THEN 'stbsp24'
   ELSE
   'other'
   -- caso nenhuma condição seja atendida
