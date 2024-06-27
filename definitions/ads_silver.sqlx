@@ -15,28 +15,26 @@ config {
 
 SELECT
   CASE
-    WHEN meta.Account_Name LIKE '%DT [TIMEWARP 04.05]%' THEN 'tw24'
-    WHEN meta.Campaign_Name LIKE '%DT [BOMA RJ 03.05]%' THEN 'bomarj24'
-    WHEN meta.Campaign_Name LIKE '%DT [BOMA BH 04.05]%' THEN 'bomabh24'
-    WHEN meta.Campaign_Name LIKE '%DT [BOMA SP 19.04]%' THEN 'bomasp24'
-    WHEN meta.Campaign_Name LIKE '%[NO ART]%' THEN 'noart24'
-    WHEN meta.Campaign_Name LIKE '%[DISCLOSURE]%' THEN 'bomadis24'
-    WHEN meta.Campaign_Name LIKE '%DT - [Brunch RJ 27.01.24]%' THEN 'brunrj24'
-    WHEN meta.Campaign_Name LIKE '%[BRUNCH SP 16.03]%' THEN 'brunchsp24-1'
-    WHEN meta.Campaign_Name LIKE '%DT - [Tantsa 21.09.23]%' THEN 'tantsa23'
-    WHEN meta.Campaign_Name LIKE '%DT - [BOMA RIO 17.11.23]%' THEN 'bomarj23'
-    WHEN meta.Campaign_Name LIKE '%[STB SP 24]%' THEN 'stbsp24'
+    WHEN ad.CampaignName LIKE '%DT [TIMEWARP 04.05]%' THEN 'tw24'
+    WHEN ad.CampaignName LIKE '%DT [BOMA RJ 03.05]%' THEN 'bomarj24'
+    WHEN ad.CampaignName LIKE '%DT [BOMA BH 04.05]%' THEN 'bomabh24'
+    WHEN ad.CampaignName LIKE '%DT [BOMA SP 19.04]%' THEN 'bomasp24'
+    WHEN ad.CampaignName LIKE '%[NO ART]%' THEN 'noart24'
+    WHEN ad.CampaignName LIKE '%[DISCLOSURE]%' THEN 'bomadis24'
+    WHEN ad.CampaignName LIKE '%DT - [Brunch RJ 27.01.24]%' THEN 'brunrj24'
+    WHEN ad.CampaignName LIKE '%[BRUNCH SP 16.03]%' THEN 'brunchsp24-1'
+    WHEN ad.CampaignName LIKE '%DT - [Tantsa 21.09.23]%' THEN 'tantsa23'
+    WHEN ad.CampaignName LIKE '%DT - [BOMA RIO 17.11.23]%' THEN 'bomarj23'
+    WHEN ad.CampaignName LIKE '%[STB SP 24]%' THEN 'stbsp24'
   ELSE
   'other'
-  -- caso nenhuma condição seja atendida
-END
-  AS id_evento,
-  ad.Account_Name AS Conta,
-  ad.Campaign_Name AS Campanha,
+END AS id_evento,
+  ad.AccountName AS Conta,
+  ad.CampaignName AS Campanha,
   ad.day AS DATA,
   CAST(ad.Conversions AS INT64) AS Conversoes,
-  ad.Cost__Spend_ AS Custo,
-  ad.Total_conv__value AS Faturado,
+  ad.CostSpend AS Custo,
+  ad.Totalconvvalue AS Faturado,
   'GOOGLE' AS Plataforma
 FROM
   `datawavedb.db1.ads_google` AS ad
@@ -45,28 +43,28 @@ WHERE
 UNION ALL
 SELECT
   CASE
-    WHEN meta.Account_Name LIKE '%DT [TIMEWARP 04.05]%' THEN 'tw24'
-    WHEN meta.Campaign_Name LIKE '%DT [BOMA RJ 03.05]%' THEN 'bomarj24'
-    WHEN meta.Campaign_Name LIKE '%DT [BOMA BH 04.05]%' THEN 'bomabh24'
-    WHEN meta.Campaign_Name LIKE '%DT [BOMA SP 19.04]%' THEN 'bomasp24'
-    WHEN meta.Campaign_Name LIKE '%[NO ART]%' THEN 'noart24'
-    WHEN meta.Campaign_Name LIKE '%[DISCLOSURE]%' THEN 'bomadis24'
-    WHEN meta.Campaign_Name LIKE '%DT - [Brunch RJ 27.01.24]%' THEN 'brunrj24'
-    WHEN meta.Campaign_Name LIKE '%[BRUNCH SP 16.03]%' THEN 'brunchsp24-1'
-    WHEN meta.Campaign_Name LIKE '%DT - [Tantsa 21.09.23]%' THEN 'tantsa23'
-    WHEN meta.Campaign_Name LIKE '%DT - [BOMA RIO 17.11.23]%' THEN 'bomarj23'
-    WHEN meta.Campaign_Name LIKE '%[STB SP 24]%' THEN 'stbsp24'
+    WHEN meta.NomedaCampanha LIKE '%DT [TIMEWARP 04.05]%' THEN 'tw24'
+    WHEN meta.NomedaCampanha LIKE '%DT [BOMA RJ 03.05]%' THEN 'bomarj24'
+    WHEN meta.NomedaCampanha LIKE '%DT [BOMA BH 04.05]%' THEN 'bomabh24'
+    WHEN meta.NomedaCampanha LIKE '%DT [BOMA SP 19.04]%' THEN 'bomasp24'
+    WHEN meta.NomedaCampanha LIKE '%[NO ART]%' THEN 'noart24'
+    WHEN meta.NomedaCampanha LIKE '%[DISCLOSURE]%' THEN 'bomadis24'
+    WHEN meta.NomedaCampanha LIKE '%DT - [Brunch RJ 27.01.24]%' THEN 'brunrj24'
+    WHEN meta.NomedaCampanha LIKE '%[BRUNCH SP 16.03]%' THEN 'brunchsp24-1'
+    WHEN meta.NomedaCampanha LIKE '%DT - [Tantsa 21.09.23]%' THEN 'tantsa23'
+    WHEN meta.NomedaCampanha LIKE '%DT - [BOMA RIO 17.11.23]%' THEN 'bomarj23'
+    WHEN meta.NomedaCampanha LIKE '%[STB SP 24]%' THEN 'stbsp24'
   ELSE
   'other'
   -- caso nenhuma condição seja atendida
 END
   AS id_evento,
-  meta.Account_Name AS Conta,
-  meta.Campaign_Name AS Campanha,
+  meta.AccountName AS Conta,
+  meta.NomedaCampanha AS Campanha,
   cast(meta.day as date) AS DATA,
   cast(meta.Purchases as INT64) AS Conversoes,
-  meta.Amount_Spent AS Custo,
-  cast(meta.Purchases_Conversion_Value as FLOAT64) AS Faturado,
+  meta.AmountSpent AS Custo,
+  cast(meta.PurchasesConversionValue as FLOAT64) AS Faturado,
   'META' AS Plataforma
 FROM
   `datawavedb.db1.ads_meta` AS meta
