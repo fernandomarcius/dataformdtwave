@@ -10,7 +10,8 @@ config {
       QtdCompras: "Quantas transações foram realizadas pelo clientes",
       QtdTickets: "Soma de tickets comprados em todas as transações",
       TicketMedio: "Total gasto divido pela quantidade tickets",
-      QtdEventos: "Quantos eventos o cliente realizou transações"
+      QtdEventos: "Quantos eventos o cliente realizou transações",
+      ListaDeEventos: "Eventos em que o Cliente comprou"
 
     }
 }
@@ -21,16 +22,19 @@ SELECT
   SUM(evt.Valor) AS TotalGasto,
   MAX(evt.DataPedido) AS UltimaCompra,
   MIN(evt.DataPedido) AS PrimeiraCompra,
-  COUNT(evt.DataPedido) AS QtdCompras,
+  COUNT(*) AS QtdCompras,
   SUM(evt.Tickets) AS QtdTickets,
   ROUND(SUM(evt.Valor) / COUNT(evt.DataPedido), 2) AS TicketMedio,
-  (COUNT(distinct(evt.id_evento))) as QtdEventos
+  COUNT(distinct(evt.id_evento)) as QtdEventos,
+  ARRAY_AGG(evt.id_evento) AS ListaDeEventos
 FROM
   datawavedb.silver.cliente_silver AS cli
 INNER JOIN
   datawavedb.silver.evento_silver AS evt
 ON
   evt.id_cliente = cli.ID
+WHERE
+  cli.Nome <> 'ENTOURAGE CONTEÚDO ARTÍSTICO'
 GROUP BY
   cli.ID,
   cli.Nome
