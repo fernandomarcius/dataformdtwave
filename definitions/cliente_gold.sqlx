@@ -2,42 +2,62 @@ config {
     type: "table",
     name: "cliente_gold",
     columns: {
-      id_cliente: "Id único do cliente (cliente_silver.ID)" ,
-      Nome_Cliente: "Nome registrado do Cliente" ,
-      TotalGasto: "Total faturado no cpf do Cliente" ,
-      UltimaCompra: "Ultima compra realizada com sucesso",
-      PrimeiraCompra:"Primeira compra realizada com sucesso",
-      QtdCompras: "Quantas transações foram realizadas pelo clientes",
-      QtdTickets: "Soma de tickets comprados em todas as transações",
-      TicketMedio: "Total gasto divido pela quantidade tickets",
-      QtdEventos: "Quantos eventos o cliente realizou transações",
-      ListaDeEventos: "Eventos em que o Cliente comprou"
-
+        id_cliente: "Id único do cliente (cliente_silver.ID)",
+        Nome_Cliente: "Nome registrado do Cliente",
+        TotalGasto: "Total faturado no cpf do Cliente",
+        UltimaCompra: "Ultima compra realizada com sucesso",
+        PrimeiraCompra: "Primeira compra realizada com sucesso",
+        QtdCompras: "Quantas transações foram realizadas pelo cliente",
+        QtdTickets: "Soma de tickets comprados em todas as transações",
+        TicketMedio: "Total gasto dividido pela quantidade de tickets",
+        QtdEventos: "Quantos eventos o cliente realizou transações",
+        ListaDeEventos: "Eventos em que o Cliente comprou",
+        SegmentoFrequencia: "Segmentação do cliente com base na frequência de eventos",
+        SegmentoFaturamento: "Segmentação do cliente com base no faturamento",
+        SegmentoMobilidade: "Segmentação do cliente com base na mobilidade entre estados"
     }
 }
 
 SELECT
-  cli.ID as id_cliente,
-  cli.Nome as Nome_Cliente,
+  cli.ID AS id_cliente,
+  cli.Nome AS Nome_Cliente,
   SUM(evt.Valor) AS TotalGasto,
   MAX(evt.DataPedido) AS UltimaCompra,
   MIN(evt.DataPedido) AS PrimeiraCompra,
   COUNT(*) AS QtdCompras,
   SUM(evt.Tickets) AS QtdTickets,
   ROUND(SUM(evt.Valor) / COUNT(evt.DataPedido), 2) AS TicketMedio,
-  COUNT(distinct(evt.id_evento)) as QtdEventos,
-  ARRAY_AGG(evt.id_evento) AS ListaDeEventos
+  COUNT(DISTINCT(evt.id_evento)) AS QtdEventos,
+  ARRAY_AGG(evt.id_evento) AS ListaDeEventos,
+  seg_frequencia.SegmentoFrequencia,
+  seg_faturamento.SegmentoFaturamento,
+  seg_mobilidade.SegmentoMobilidade
 FROM
   datawavedb.silver.cliente_silver AS cli
 INNER JOIN
   datawavedb.silver.evento_silver AS evt
 ON
   evt.id_cliente = cli.ID
+LEFT JOIN
+  ${ref("cliente_segmentado")} AS seg_frequencia
+ON
+  cli.ID = seg_frequencia.id_cliente
+LEFT JOIN
+  ${ref("cliente_segmentado")} AS seg_faturamento
+ON
+  cli.ID = seg_faturamento.id_cliente
+LEFT JOIN
+  ${ref("cliente_segmentado")} AS seg_mobilidade
+ON
+  cli.ID = seg_mobilidade.id_cliente
 WHERE
   cli.Nome <> 'ENTOURAGE CONTEÚDO ARTÍSTICO'
 GROUP BY
   cli.ID,
-  cli.Nome
+  cli.Nome,
+  seg_frequencia.SegmentoFrequencia,
+  seg_faturamento.SegmentoFaturamento,
+  seg_mobilidade.SegmentoMobilidade
 HAVING
   TotalGasto > 0
 ORDER BY

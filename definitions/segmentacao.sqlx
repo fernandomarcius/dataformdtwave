@@ -1,0 +1,83 @@
+config {
+    type: "incremental",
+    name: "cliente_segmentado",
+    columns: {
+        id_cliente: "ID do cliente (silver.cliente_silver)",
+        Nome: "Nome do Cliente (silver.cliente_silver)",
+        QtdEventos: "Quantidade de eventos que o cliente participou",
+        SegmentoFrequencia: "Segmentação do cliente com base na frequência de eventos",
+        FaturamentoTotal: "Faturamento total do cliente",
+        SegmentoFaturamento: "Segmentação do cliente com base no faturamento",
+        QtdEstados: "Quantidade de estados em que o cliente participou de eventos",
+        SegmentoMobilidade: "Segmentação do cliente com base na mobilidade entre estados"
+    }
+}
+
+WITH
+  eventos_cliente AS (
+  SELECT
+    ev.id_cliente,
+    COUNT(DISTINCT ev.id_evento) AS QtdEventos,
+    SUM(ev.Valor) AS FaturamentoTotal,
+    COUNT(DISTINCT tab.UF) AS QtdEstados
+  FROM
+    datawavedb.silver.evento_silver ev
+ INNER JOIN
+     datawavedb.db1.evento_tab as tab on tab.ID = ev.id_evento
+  GROUP BY
+    ev.id_cliente
+),
+  segmentacao_frequencia AS (
+  SELECT
+    id_cliente,
+    QtdEventos,
+    CASE
+      WHEN QtdEventos >= 5 THEN 'SuperFã'
+      WHEN QtdEventos > 3 THEN 'Fã'
+      WHEN QtdEventos > 1 THEN 'Vip'
+      ELSE 'Regular'
+    END AS SegmentoFrequencia
+  FROM
+    eventos_cliente
+),
+  segmentacao_faturamento AS (
+  SELECT
+    id_cliente,
+    FaturamentoTotal,
+    CASE
+      WHEN FaturamentoTotal > 3000 THEN 'DIAMOND'
+      WHEN FaturamentoTotal > 1500 THEN 'GOLD'
+      WHEN FaturamentoTotal >= 600 THEN 'SILVER'
+      ELSE 'BRONZE'
+    END AS SegmentoFaturamento
+  FROM
+    eventos_cliente
+),
+  segmentacao_mobilidade AS (
+  SELECT
+    id_cliente,
+    QtdEstados,
+    CASE
+      WHEN QtdEstados > 1 THEN 'Mochileiro'
+      ELSE 'Normal'
+    END AS SegmentoMobilidade
+  FROM
+    eventos_cliente
+)
+SELECT
+  cs.ID AS id_cliente,
+  cs.Nome,
+  ef.QtdEventos,
+  ef.SegmentoFrequencia,
+  sf.FaturamentoTotal,
+  sf.SegmentoFaturamento,
+  sm.QtdEstados,
+  sm.SegmentoMobilidade
+FROM
+  datawavedb.silver.cliente_silver cs
+JOIN
+  segmentacao_frequencia ef ON cs.ID = ef.id_cliente
+JOIN
+  segmentacao_faturamento sf ON cs.ID = sf.id_cliente
+JOIN
+  segmentacao_mobilidade sm ON cs.ID = sm.id_cliente
