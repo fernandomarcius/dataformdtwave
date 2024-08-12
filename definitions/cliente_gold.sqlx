@@ -57,6 +57,7 @@ WHERE
 GROUP BY
   cli.ID,
   cli.Nome,
+  cli.Estado,
   seg_frequencia.SegmentoFrequencia,
   seg_faturamento.SegmentoFaturamento,
   seg_mobilidade.SegmentoMobilidade
