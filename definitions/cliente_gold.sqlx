@@ -4,6 +4,7 @@ config {
     columns: {
         id_cliente: "Id único do cliente (cliente_silver.ID)",
         Nome_Cliente: "Nome registrado do Cliente",
+        Estado: "Estado registrado do Cliente",
         TotalGasto: "Total faturado no cpf do Cliente",
         UltimaCompra: "Ultima compra realizada com sucesso",
         PrimeiraCompra: "Primeira compra realizada com sucesso",
@@ -21,6 +22,7 @@ config {
 SELECT
   cli.ID AS id_cliente,
   cli.Nome AS Nome_Cliente,
+  cli.Estado,
   SUM(evt.Valor) AS TotalGasto,
   MAX(evt.DataPedido) AS UltimaCompra,
   MIN(evt.DataPedido) AS PrimeiraCompra,
